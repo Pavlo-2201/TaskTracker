@@ -1,0 +1,36 @@
+server.port=8080
+# ============================================
+# Datasource
+# ============================================
+spring.datasource.url=jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DATABASE:task_tracker_dev}
+spring.datasource.username=${POSTGRES_USER:username}
+spring.datasource.password=${POSTGRES_PASSWORD:password}
+
+# ============================================
+# Database migrations
+# ============================================
+spring.jpa.hibernate.ddl-auto=none
+spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.yaml
+
+# ============================================
+# Logging
+# ============================================
+logging.level.com.tasktracker.backend=INFO
+
+# ============================================
+# JWT
+# ============================================
+jwt.secret=${JWT_SECRET:defaultSecretKeyThatIsLongEnoughAndMustBeReplaced}
+spring.security.oauth2.resourceserver.jwt.issuer-uri=${JWT_ISSUER_URI:http://localhost:8080}
+jwt.expiration-seconds=${JWT_EXPIRATION_SECONDS:1800}
+
+# ============================================
+# Jpa config
+# ============================================
+spring.jpa.open-in-view=false
+
+# ============================================
+# Kafka
+# ============================================
+spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+spring.kafka.topic.email-sending=${KAFKA_TOPIC_EMAIL_SENDING:EMAIL_SENDING_TASKS}

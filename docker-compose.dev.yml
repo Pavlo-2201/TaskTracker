@@ -1,0 +1,56 @@
+name: task-tracker-dev
+services:
+  postgres:
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: task_tracker_dev
+    restart: on-failure
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+
+  kafka:
+    image: apache/kafka:3.9.0
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    restart: on-failure
+
+  zookeeper:
+    image: zookeeper:3.9.3
+    environment:
+      ZOO_4LW_COMMANDS_WHITELIST: "*"
+      ZOO_MAX_CLIENT_CNXNS: 0
+    restart: on-failure
+
+  task-tracker-backend:
+    profiles:
+      - disabled
+
+  task-tracker-scheduler:
+    profiles:
+      - disabled
+
+  task-tracker-email-sender:
+    profiles:
+      - disabled
+
+  task-tracker-frontend:
+    environment:
+      BACKEND_API_URL: http://192.168.1.31:8080/
+    restart: on-failure
+#    profiles:
+#      - disabled
+
+volumes:
+  postgres_data_dev:

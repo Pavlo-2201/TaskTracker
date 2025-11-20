@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-tag-0.0.0
+      author: vladshi
+      changes:
+        - tagDatabase:
+            tag: v.0.0.0
+  - include:
+      file: 001-initial-setup.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 002-create-users-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 003-create-tasks-table.yaml
+      relativeToChangelogFile: true

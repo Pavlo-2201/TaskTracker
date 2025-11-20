@@ -1,0 +1,626 @@
+/* === Переменные === */
+:root {
+  --color-bg-base: #1e1e1e;
+  --color-bg-dark: #333; /* Светлее, чем #2c2c2c */
+  --color-text-base: #e0e0e0;
+  --color-text-hover: #ffffff;
+  --color-card-hover: rgb(255 255 255 / 25%);
+  --color-border: #444444;
+  --color-primary: #074384;
+  --color-primary-hover: #0f539c;
+  --color-error: #651c1f;
+  --color-error-hover: #811d28;
+  --color-success: #187534;
+  --color-todo-text: #d9972a; /* Тёмно-жёлтый */
+  --color-todo-border: #61431373;
+  --color-done-text: #2e7d32; /* Тёмно-зелёный */
+  --color-done-border: #35893b3b;
+  --color-button-remove-bg: #631d1d63;
+  --color-button-remove-border: #4f0e10d1;
+  --color-button-remove-hover: #d25a5abd; /* Ярче при наведении */
+  --color-button-complete-bg: #0a2915ad;
+  --color-button-complete-border: #1b4b1fb8;
+  --color-button-complete-hover: #409943ba;
+  --color-button-todo-bg: #3d2209a3;
+  --color-button-todo-border: #553b10c2;
+  --color-button-todo-hover: #dc9830b8;
+  --color-add-task-bg: #444; /* Серая кнопка */
+  --color-add-task-text: #bf7f2d; /* Жёлтый текст */
+  --spacing-sm: 5px;
+  --spacing-md: 10px;
+  --spacing-lg: 40px; /* Увеличено вдвое */
+  --shadow-base: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-notification: 1px 3px 8px rgb(145 145 145 / 60%);
+  --shadow-card: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* === Базовые стили === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--color-bg-base);
+  color: var(--color-text-base);
+  line-height: 1.6;
+}
+
+/* === Макеты === */
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+/* === Компоненты === */
+/* Header */
+.header {
+  background-color: var(--color-bg-dark);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-base);
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__title {
+  display: inline-block;
+  font-size: 26px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.8), 2px 2px 6px rgba(255, 255, 255, 0.2);
+  margin-right: 5px;
+}
+
+.header__nav {
+  display: flex;
+  flex-wrap: wrap; /* Элементы переносятся, если не помещаются */
+  align-items: center;
+  gap: 8px; /* Минимальный отступ между элементами */
+  justify-content: flex-end; /* Прижимаем к правому краю */
+}
+
+.header__nav .btn {
+  width: 130px; /* Фиксированная ширина, достаточная для "Register" с padding */
+  text-align: center; /* Центрируем текст внутри кнопок */
+  flex: 0 0 auto; /* Убираем растяжение, оставляем фиксированную ширину */
+}
+
+/* Button */
+.btn {
+  border: 1px solid;
+  border-color: rgba(255, 255, 255, 0.1) rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.5) rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: var(--color-text-base);
+  min-width: 120px;
+  text-align: center;
+  box-shadow: var(--shadow-base);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn--error {
+  background-color: var(--color-error);
+}
+
+.btn--error:hover {
+  background-color: var(--color-error-hover);
+}
+
+/* Main */
+.main {
+  padding: var(--spacing-lg) 0;
+}
+
+.main__welcome {
+  font-size: 24px; /* Увеличим размер текста */
+  text-align: center; /* Центрируем горизонтально */
+  margin: 10% auto; /* Центрируем вертикально с отступами */
+  max-width: 600px; /* Ограничиваем ширину текста */
+}
+
+/* Add Task Container */
+.add-task-container {
+  max-width: 1100px; /* Такая же максимальная ширина, как у .tasks */
+  margin: 0 auto; /* Центрируем */
+  margin-bottom: var(--spacing-md); /* Отступ между кнопкой и колонками */
+}
+
+/* Tasks */
+.tasks {
+  display: flex;
+  gap: 5%; /* Относительное расстояние между колонками */
+  max-width: 1100px; /* Такая же максимальная ширина, как у .add-task-container */
+  margin: 0 auto; /* Центрируем */
+}
+
+.tasks__column {
+  flex: 0 0 auto; /* Убираем растяжение */
+  padding: var(--spacing-md);
+  border-radius: 10px;
+  min-height: 400px;
+  width: 500px; /* Фиксированная ширина */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+  overflow: hidden; /* Предотвращаем выход содержимого */
+}
+
+.tasks__column--todo {
+  background: var(--color-bg-dark);
+  box-shadow: inset 0 0 10px rgba(245, 166, 35, 0.3);
+}
+
+.tasks__column--done {
+  background: var(--color-bg-dark);
+  box-shadow: inset 0 0 10px rgba(46, 125, 50, 0.4);
+}
+
+.tasks__title {
+  font-size: 24px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.8), 2px 2px 6px rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.tasks__column--todo .tasks__title,
+.tasks__column--todo .tasks__count {
+  color: var(--color-todo-text);
+  -webkit-text-stroke: 1px var(--color-todo-border);
+}
+
+.tasks__column--done .tasks__title,
+.tasks__column--done .tasks__count {
+  color: var(--color-done-text);
+  -webkit-text-stroke: 1px var(--color-done-border);
+}
+
+.tasks__count {
+  font-size: 26px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.8), 2px 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.tasks__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  max-height: calc(110px * 4 + var(--spacing-md) * 3 + 8px); /* Увеличено до 110px для 4 карточек */
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-bottom: 8px; /* Место для тени */
+}
+
+.tasks__list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Task Card */
+.task-card {
+  background: linear-gradient(to right, rgb(33, 33, 33) 15%, rgb(63, 39, 9) 100%);
+  padding: var(--spacing-md);
+  border-radius: 5px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  min-height: 110px; /* Увеличено для избежания наложения */
+  width: 100%; /* Занимает всю ширину колонки */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+  box-sizing: border-box; /* Учитываем padding в ширине */
+  transition: border-color 0.2s;
+}
+
+.tasks__column--todo .task-card {
+  background: linear-gradient(to right, rgb(33, 33, 33) 15%, rgb(63, 39, 9) 100%);
+  border: 1px solid var(--color-todo-border);
+}
+
+.tasks__column--done .task-card {
+  background: linear-gradient(to right, rgb(33, 33, 33) 15%, rgb(9, 45, 32) 100%);
+  border: 1px solid var(--color-done-border);
+}
+
+.task-card:hover {
+  border-color: var(--color-card-hover);
+}
+
+.task-card:hover .task-card__title{
+  color: var(--color-text-hover);
+}
+
+.task-card__title {
+  font-size: 20px;
+  font-weight: 600;
+  transition: color 0.2s;
+  max-width: calc(100% - 50px); /* Ограничиваем ширину до кнопки удаления */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-card__description {
+  font-size: 14px;
+  max-width: calc(100% - 50px); /* Ограничиваем ширину с учётом только кнопки удаления */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.8;
+  margin-bottom: var(--spacing-md);
+}
+
+.task-card__date {
+  font-size: 12px;
+  color: var(--color-text-base);
+  opacity: 0.6;
+  position: absolute;
+  bottom: var(--spacing-sm);
+  right: var(--spacing-md);
+  line-height: 16px;
+  display: block; /* Убираем flex для явного контроля строк */
+  text-align: right; /* Прижимаем к правому краю */
+}
+
+.task-card__date .time {
+  display: block; /* Время в отдельной строке */
+  margin-bottom: 2px; /* Отступ между временем и датой */
+}
+
+.task-card__status,
+.task-card__delete {
+  position: absolute;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.task-card__delete {
+  top: var(--spacing-sm);
+  right: var(--spacing-md);
+  background-color: var(--color-button-remove-bg);
+  border: 1px solid var(--color-button-remove-border);
+  color: #ffa19194;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 36px; /* Центрируем крестик вертикально */
+  font-size: 20px; /* Увеличим крестик */
+  position: absolute;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  z-index: 1; /* Убеждаемся, что кнопка поверх псевдоэлемента */
+}
+
+.task-card__delete:hover {
+  border-color: var(--color-button-remove-hover);
+  color: var(--color-button-remove-hover);
+}
+
+.task-card__delete::after {
+  content: "✖"; /* Крестик */
+}
+
+.task-card__status {
+  bottom: var(--spacing-sm);
+  left: var(--spacing-md);
+  min-width: 80px; /* Уменьшено с 90px */
+  text-align: center;
+  height: 36px; /* Уменьшено с 40px */
+  line-height: 36px; /* Центрируем текст и иконку */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  z-index: 1; /* Убеждаемся, что кнопка поверх псевдоэлемента */
+}
+
+.task-card__status--complete {
+  background-color: var(--color-button-complete-bg);
+  border: 1px solid var(--color-button-complete-border);
+  color: #2e6755;
+}
+
+.task-card__status--complete:hover {
+  border-color: var(--color-button-complete-hover);
+  color: var(--color-button-complete-hover);
+}
+
+.task-card__status--todo {
+  background-color: var(--color-button-todo-bg);
+  border: 1px solid var(--color-button-todo-border);
+  color: #7d5b0c;
+}
+
+.task-card__status--todo:hover {
+  border-color: var(--color-button-todo-hover);
+  color: var(--color-button-todo-hover);
+}
+
+/* Иконки для даты (Material Icons) */
+.task-card__date i.material-icons {
+  margin-left: 4px;
+  margin-right: 2px;
+  font-size: 14px;
+  vertical-align: middle;
+  transform: translateY(-2px);
+}
+
+/* Add Task Button */
+.add-task-btn {
+  background-color: var(--color-add-task-bg);
+  color: var(--color-add-task-text);
+  border: 1px solid var(--color-todo-border);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 3px 3px 4px rgb(0 0 0 / 50%);
+  width: 50%; /* Половина ширины контейнера на широких экранах */
+  position: relative;
+}
+
+.add-task-btn::before {
+  content: ""; /* перед текстом */
+  margin-right: 0.5em; /* Отступ справа */
+}
+
+.add-task-btn::after {
+  content: ""; /* после текста */
+  margin-left: 0.5em; /* Отступ слева */
+}
+
+.add-task-btn:hover {
+  transform: translateY(-1px);
+  color: #c18b17;
+  border-color: #6c500e;
+}
+
+/* Task Form */
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.task-form__dates,
+.task-form__status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 14px;
+  color: var(--color-text-base);
+}
+
+.task-form__dates label {
+  padding-left: 5px;
+  width: 80px;
+}
+
+.task-form__status {
+  align-items: center; /* Вертикальное центрирование */
+}
+
+.task-form__status .task-card__status {
+  margin-left: 0; /* Убираем лишние отступы */
+  position: static; /* Убираем абсолютное позиционирование в модальном окне */
+  width: 80px; /* Такая же ширина, как у кнопки на карточке */
+  height: 36px; /* Такая же высота, как у кнопки на карточке */
+  line-height: 36px; /* Центрируем текст и иконку */
+}
+
+.task-form__date {
+  opacity: 0.7;
+}
+
+/* Иконки для даты (Material Icons) в модальном окне */
+.task-form__date i.material-icons {
+  margin-left: 8px;
+  font-size: 14px;
+  vertical-align: middle;
+  transform: translateY(-2px);
+}
+
+@media (min-width: 1100px) {
+  .add-task-btn {
+    max-width: 500px; /* Ограничение ширины для широких экранов */
+  }
+}
+
+/* Media Queries for Adaptive Design */
+@media (max-width: 1100px) {
+  .tasks {
+    flex-direction: column;
+    gap: var(--spacing-md); /* Уменьшаем расстояние между колонками на мобильных */
+    align-items: stretch; /* Колонки растягиваются на всю ширину */
+  }
+
+  .tasks__column {
+    width: 100%; /* Колонки занимают всю ширину на мобильных */
+    max-width: 90%; /* Ограничиваем ширину до 95% */
+    margin: 0 auto; /* Центрируем колонки */
+  }
+
+  .add-task-btn {
+    width: 100%; /* Кнопка занимает всю ширину на мобильных */
+    text-align: center; /* Центрируем текст внутри кнопки */
+  }
+
+  .add-task-container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 800px) {
+  .tasks__column {
+    max-width: 95%; /* Увеличиваем ширину до 95% для экранов < 800px */
+  }
+  .add-task-container {
+    width: 95%;
+  }
+}
+
+/* Custom Scrollbar for Page */
+body {
+  scrollbar-width: thin; /* Для Firefox */
+  scrollbar-color: #4a4a4a #2d2d2d; /* Ползунок и фон для Firefox */
+}
+
+body::-webkit-scrollbar {
+  width: 12px; /* Ширина скроллбара */
+}
+
+body::-webkit-scrollbar-track {
+  background: #2d2d2d; /* Фон дорожки */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a; /* Цвет ползунка */
+  border-radius: 4px; /* Скругление углов */
+  border: 2px solid #2d2d2d; /* Граница для эффекта */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #666; /* Цвет при наведении */
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.modal:target {
+  display: block;
+}
+
+.modal__content {
+  background-color: var(--color-bg-dark);
+  max-width: 400px;
+  margin: 15% auto 25% auto;
+  padding: var(--spacing-lg);
+  border-radius: 5px;
+  position: relative;
+  transform: translateY(-5px);
+}
+
+/* Message */
+.message {
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 5px;
+  min-height: 62px;
+  text-align: center;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message--error {
+  background-color: var(--color-error);
+  color: var(--color-text-base);
+  visibility: visible;
+}
+
+/* Auth Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form__label {
+  margin-bottom: var(--spacing-sm);
+}
+
+.auth-form__input {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background-color: #3a3a3a;
+  color: var(--color-text-base);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  padding: 15px;
+  background-color: var(--color-success);
+  color: var(--color-text-base);
+  border-radius: 5px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  box-shadow: var(--shadow-notification);
+  display: none;
+  z-index: 1000;
+}
+
+.notification--error {
+  background-color: var(--color-error);
+}
+
+/* Специфичные стили */
+.header__nav span {
+  margin-right: var(--spacing-md);
+  vertical-align: middle;
+}
+
+.modal__close {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  color: var(--color-text-base);
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.modal__close:hover {
+  color: var(--color-text-hover);
+}
+
+.modal__title {
+  margin-bottom: var(--spacing-sm);
+}

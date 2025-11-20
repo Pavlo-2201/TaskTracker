@@ -1,0 +1,103 @@
+services:
+  postgres:
+    image: postgres:17.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  zookeeper:
+    image: zookeeper:3.9.3
+    environment:
+      ZOO_4LW_COMMANDS_WHITELIST: "*"
+      ZOO_MAX_CLIENT_CNXNS: 0
+    restart: unless-stopped
+
+  kafka:
+    image: apache/kafka:3.9.0
+    environment:
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_BOOTSTRAP_SERVERS}
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+
+  task-tracker-backend:
+    build:
+      context: ./task-tracker-backend
+      dockerfile: Dockerfile
+    image: task-tracker-backend
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
+      JWT_EXPIRATION_SECONDS: ${JWT_EXPIRATION_SECONDS}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      KAFKA_TOPIC_EMAIL_SENDING: ${KAFKA_TOPIC_EMAIL_SENDING}
+    depends_on:
+      - postgres
+      - kafka
+    restart: unless-stopped
+
+  task-tracker-scheduler:
+    build:
+      context: ./task-tracker-scheduler
+      dockerfile: Dockerfile
+    image: task-tracker-scheduler
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      KAFKA_TOPIC_EMAIL_SENDING: ${KAFKA_TOPIC_EMAIL_SENDING}
+    depends_on:
+      - postgres
+      - kafka
+    restart: unless-stopped
+
+  task-tracker-email-sender:
+    build:
+      context: ./task-tracker-email-sender
+      dockerfile: Dockerfile
+    image: task-tracker-email-sender
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      KAFKA_TOPIC_EMAIL_SENDING: ${KAFKA_TOPIC_EMAIL_SENDING}
+      KAFKA_GROUP_EMAIL_SENDER: ${KAFKA_GROUP_EMAIL_SENDER}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_VERIFIED_EMAIL: ${MAIL_VERIFIED_EMAIL}
+    depends_on:
+      - kafka
+    restart: unless-stopped
+
+  task-tracker-frontend:
+    build:
+      context: ./task-tracker-frontend
+      dockerfile: Dockerfile
+    image: task-tracker-frontend
+    ports:
+      - "80:80"
+    environment:
+      BACKEND_API_URL: ${BACKEND_API_URL}
+    restart: unless-stopped
+
+volumes:
+  postgres_data_prod:
